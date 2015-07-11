@@ -6,6 +6,8 @@ class CreateLibraries < ActiveRecord::Migration
       t.string :city
       t.string :zipcode
       t.string :number
+      t.float :latitude
+      t.float :longitude
 
       t.timestamps null: false
     end

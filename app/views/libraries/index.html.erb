@@ -1,1 +1,12 @@
+<h3>Kansas Public Libraries</h3>
 <div id="map-canvas"></div>
+<div id="info">
+  <div id="links" class='col-xs-4'>
+  <% @libraries.each do |library| %>
+    <div id="<%= library.id - 1 %>" class="library"><%= library.name %></div>
+  <% end %>
+  </div>
+  <div id="specific" class='col-xs-4'></div>
+</div>
+
+<%= render partial: "map.js" %>
