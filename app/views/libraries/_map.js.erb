@@ -3,7 +3,7 @@
 $(document).ready(function(){
 
   var map;
-  var json = <%= Library.jsonify.html_safe %>
+  var json = <%= Library.jsonify.html_safe %>;
 
   function initialize() {
     geocoder = new google.maps.Geocoder();
@@ -15,7 +15,6 @@ $(document).ready(function(){
     }
     map = new google.maps.Map(mapCanvas, mapOptions);
 
-
     json.forEach(function(library){
       var myLatlng = new google.maps.LatLng(library.lat,library.long);
       var marker = new google.maps.Marker({
@@ -26,24 +25,48 @@ $(document).ready(function(){
       });
 
       google.maps.event.addListener(marker, 'click', function() { 
-        $('#'+marker.id).click();
+        displayInfo(marker.id);
       }); 
 
     });
   }
 
-  function addMarker(){
+  function displayInfo(index){
+    var library = json[index];
 
+    var formatted_info = "<p>"+library.name+"</p><p>"+library.address+"</p><p>"+library.city+", "+library.zipcode+"</p>";
+    $('#specific').html(formatted_info);
   }
 
   $('.library').on("click",function(){
-    // debugger;
     var index = $(this).attr('id');
-    var library = json[index];
-
-    formatted_info = "<p>"+library.name+"</p><p>"+library.address+"</p><p>"+library.city+", "+library.zipcode+"</p>";
-    $('#specific').html(formatted_info);
+    displayInfo(index);
   })
+
+  $('#next').on('click',function(event){
+    event.preventDefault();
+    var next = parseInt($('#links').children()[0].id)+9;
+    displayLinks(next);
+  })
+
+  $('#previous').on('click',function(event){
+    event.preventDefault();
+    var prev = parseInt($('#links').children()[0].id)-7;
+    displayLinks(prev);
+  })
+
+  function displayLinks(start){
+    $('#links').html("");
+    for(var i = 0; i < 8; i++){
+      var library = json[i+start-1];
+      $('#links').append("<div id='"+(library.id-1)+"' class='library'>"+library.name+"</div>");
+    }
+
+    $('.library').on("click",function(){
+      var index = $(this).attr('id');
+      displayInfo(index);
+    })
+  }
 
   initialize();
 
