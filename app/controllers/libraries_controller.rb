@@ -1,4 +1,5 @@
 class LibrariesController < ApplicationController
+
   def index
     # first = Library.first
     # array = []

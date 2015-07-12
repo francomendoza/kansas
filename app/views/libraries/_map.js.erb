@@ -4,7 +4,7 @@ $(document).ready(function(){
 
   var map;
   var json = <%= Library.jsonify.html_safe %>;
-
+// creates a new map with appropriate markers
   function initialize() {
     geocoder = new google.maps.Geocoder();
     var mapCanvas = document.getElementById('map-canvas');
@@ -15,6 +15,7 @@ $(document).ready(function(){
     }
     map = new google.maps.Map(mapCanvas, mapOptions);
 
+// iterate through each library and add marker
     json.forEach(function(library){
       var myLatlng = new google.maps.LatLng(library.lat,library.long);
       var marker = new google.maps.Marker({
@@ -23,7 +24,7 @@ $(document).ready(function(){
         title: library.name,
         id: library.id
       });
-
+// markers need event listeners
       google.maps.event.addListener(marker, 'click', function() { 
         displayInfo(marker.id);
       }); 
@@ -31,18 +32,20 @@ $(document).ready(function(){
     });
   }
 
-  function displayInfo(index){
-    var library = json[index];
-
-    var formatted_info = "<p>"+library.name+"</p><p>"+library.address+"</p><p>"+library.city+", "+library.zipcode+"</p>";
-    $('#specific').html(formatted_info);
-  }
-
+// text needs event listener with similar functionality to marker event listener
   $('.library').on("click",function(){
     var index = $(this).attr('id');
     displayInfo(index);
   })
 
+// updates info for library on DOM and triggers by marker click or name click
+  function displayInfo(index){
+    var library = json[index];
+    var formatted_info = "<p>"+library.name+"</p><p>"+library.address+"</p><p>"+library.city+", "+library.zipcode+"</p>";
+    $('#specific').html(formatted_info);
+  }
+
+// event listeners for page nav use the id of the first library to move to the next 8 libraries
   $('#next').on('click',function(event){
     event.preventDefault();
     var next = parseInt($('#links').children()[0].id)+9;
@@ -55,6 +58,7 @@ $(document).ready(function(){
     displayLinks(prev);
   })
 
+// writes names on the DOM, and adds listeners to them
   function displayLinks(start){
     $('#links').html("");
     for(var i = 0; i < 8; i++){
